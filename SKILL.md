@@ -1,0 +1,64 @@
+---
+name: podcast-planner
+description: This skill should be used when a user wants to plan or draft a podcast episode—especially interview or video podcasts that need a guest profile, a unifying episode theme, and a concrete list of discussion topics/questions. It guides an interactive intake (guest, theme, goal, format, sponsor/soft-ad constraints, air date), researches the guest from public sources, then produces a ready-to-record planning doc with a one-line theme and numbered topics that blend trendy social hooks, consumer-science explainers, and guest-specific career/decision questions.
+agent_created: true
+---
+
+# 播客策划 Podcast Planner
+
+## Overview
+
+把"做一期播客"的需求，转化成一份**可直接拿去录制**的策划案：包含嘉宾信息梳理、一个统一的对谈主题、以及围绕主题展开的具体话题（每个话题一句话说明）。适用于视频播客、访谈播客、品牌赞助类节目等。
+
+策划案的质量标准是：**有网感（能传播）、消费者关心（有痛点/有用）、且贴合嘉宾本人（最适合由他答）**，深入浅出、接地气、有讨论度，是主持人和嘉宾能聊得好的内容。
+
+## Workflow
+
+### Step 1 — 交互收集需求（必须先做，不要直接写）
+
+用 `AskUserQuestion` 向用户提问，至少覆盖以下维度（一次问 2–4 个，分多轮也行，不要一次堆太多）：
+
+1. **嘉宾**：姓名 / 身份 / 所属品牌或公司 / 一句话简介。若用户给的信息不全，先按已有信息开工，标注"待补充"。
+2. **主题方向**：这期想聊的大方向（如"进口消费""口腔健康""职场成长"），或用户是否已有明确主题。
+3. **这期的作用 / 商业目标**：纯内容、品牌曝光、带货、还是赞助软广？若有赞助商，问清**核心理念**（如"正品 + 进口新品供给"）和**软广占比上限**（建议 ≤15–20%）。
+4. **形式**：视频 / 音频；成片时长、拍摄时长；主持人是谁（影响提问风格）。
+5. **播出节点 / 档期**：是否有借势节点（如进博会、双 11、某个热点），用于设计热点钩子。
+
+若用户已在上文给出足够信息，可跳过对应问题，但**至少确认嘉宾与主题方向**再开工。
+
+### Step 2 — 调研嘉宾（公开信息，严禁编造）
+
+- 用 `WebSearch` / `WebFetch` 核实嘉宾的公开资料：现任职务、职业经历时间线、代表观点（尽量保留原话与出处）、其品牌/公司的关键事实（成立年份、规模、市场动作、近期发布会/数据）。
+- 只写可核实的内容；公开渠道查不到的（年龄、团队规模、具体经销模式等）列入"待核对清单"，**不要凭空补全**。
+- 同步收集 1–2 个**近期社会热点**作为可选项钩子（如"大水理论"、某行业翻车事件），仅作示例，不强行塞入。
+
+### Step 3 — 设计议题（三类问题穿插 + 软广夹带 + 红线）
+
+围绕**一个统一主题**组织话题，推荐节奏：开场钩子 → 消费者科普 → 嘉宾个人决策与困境 → 收尾。每类问题都要有，混合编排：
+
+- **A. 网感热点钩子**：近期热梗 / 数据反差 / 站队引战 / 人人有发言权，用于开场炸场、蹭传播。
+- **B. 消费者科普**：和主题相关的实用知识、避坑、参数对比（如"几十块 vs 几百块差在哪"），让观众"能用、能带走"。
+- **C. 嘉宾个人线**：嘉宾在品牌建设中的关键决策、为什么这么做、遇到的困境、怎么解决；以及其职业经历中观众爱听的故事。这是"只有他答得了"的部分。
+
+软广夹带原则：若节目有赞助，核心理念只落在 **1–2 个主话题 + 结尾一句话轻合流**，全片占比控制在用户给的上限内（默认 ≤20%），不念稿、不在避坑/批判环节硬插品牌。
+
+红线（写入策划案末尾，录制前必读）：
+- 涉及保健品 / 个护 / 食品等，**不得宣称治疗、医疗、疗效**（只能讲日常护理、生活习惯、科普）。
+- 国货 vs 进口 / 平替等对立话题，引导成"各有护城河"，不做阵营对立。
+- 行业翻车案例可作为"行业乱象"谈，不做人身攻击、不点名抹黑其他品牌。
+- 关税 / 宏观等敏感话题，只谈对经营与终端价的影响，不上升到地缘评判（如需公开聊，录制前确认）。
+
+### Step 4 — 输出策划案
+
+按 `references/output_template.md` 的统一格式产出 Markdown 文件，文件名建议 `第X期_主持人×嘉宾_主题_议题稿.md`。文件包含：标题、统一主题一句话、编号话题列表（每条一句话说明，标注【软广落点】）、软广落点小结、红线提醒。
+
+交付后用 `present_files` 展示。如需 Word 版，按 workbuddy-docx 技能转换。
+
+## References
+
+- `references/workflow.md` — 更细的方法论：嘉宾调研清单、三类问题的设计套路与示例、软广夹带与红线的具体写法、选题节奏与待核对清单模板。
+- `references/output_template.md` — 策划案输出格式模板，直接套用。
+
+## Resources
+
+本 skill 不需要 scripts/ 与 assets/；如初始化时生成了示例文件，可删除。
